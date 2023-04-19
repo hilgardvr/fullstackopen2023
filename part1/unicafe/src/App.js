@@ -43,9 +43,7 @@ const Statistics = ({stats}) => {
     )
   } else {
     return (
-      <div>
-        <StatisticLine text="No feedback given" />
-      </div>
+      <div>"No feedback given"</div>
     )
   }
 }
