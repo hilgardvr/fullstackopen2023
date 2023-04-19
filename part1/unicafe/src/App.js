@@ -15,7 +15,7 @@ const DisplayStat = ({text, stat}) => (
   <div>{text} {stat}</div>
 )
 
-const DisplayStats = ({stats}) => {
+const Statistics = ({stats}) => {
   // console.log(stats)
   const keys = Object.keys(stats)
   let total = 0
@@ -27,6 +27,12 @@ const DisplayStats = ({stats}) => {
   if (total > 0) {
     ave = (stats["good"] - stats["bad"]) / total
     positivePercent = stats["good"] * 100 / total
+  } else {
+    return (
+      <div>
+        <DisplayStat text="No feedback given" />
+      </div>
+    )
   }
   return (
     <div>
@@ -61,7 +67,7 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button handleClick={() => setBad(bad + 1)} text="bad" />
       <DisplaySection text="statistics" />
-      <DisplayStats stats={stats} />
+      <Statistics stats={stats} />
     </div>
   )
 }
