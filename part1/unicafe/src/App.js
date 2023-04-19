@@ -12,7 +12,10 @@ const Button = ({handleClick, text}) => (
 )
 
 const StatisticLine = ({text, value}) => (
-  <div>{text} {value}</div>
+  <tr>
+    <td>{text} </td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({stats}) => {
@@ -27,14 +30,16 @@ const Statistics = ({stats}) => {
     ave = (stats["good"] - stats["bad"]) / total
     positivePercent = stats["good"] * 100 / total
     return (
-      <div>
-        <StatisticLine text="good" value={stats.good} />
-        <StatisticLine text="neutral" value={stats.neutral} />
-        <StatisticLine text="bad" value={stats.bad} />
-        <StatisticLine text="all" value={total} />
-        <StatisticLine text="average" value={ave} />
-        <StatisticLine text="positive" value={positivePercent + " %"} />
-      </div>
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={stats.good} />
+          <StatisticLine text="neutral" value={stats.neutral} />
+          <StatisticLine text="bad" value={stats.bad} />
+          <StatisticLine text="all" value={total} />
+          <StatisticLine text="average" value={ave} />
+          <StatisticLine text="positive" value={positivePercent + " %"} />
+        </tbody>
+      </table>
     )
   } else {
     return (
