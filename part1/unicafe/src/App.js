@@ -11,12 +11,11 @@ const Button = ({handleClick, text}) => (
   </button>
 )
 
-const DisplayStat = ({text, stat}) => (
-  <div>{text} {stat}</div>
+const StatisticLine = ({text, value}) => (
+  <div>{text} {value}</div>
 )
 
 const Statistics = ({stats}) => {
-  // console.log(stats)
   const keys = Object.keys(stats)
   let total = 0
   keys.forEach(key => {
@@ -27,33 +26,29 @@ const Statistics = ({stats}) => {
   if (total > 0) {
     ave = (stats["good"] - stats["bad"]) / total
     positivePercent = stats["good"] * 100 / total
+    return (
+      <div>
+        <StatisticLine text="good" value={stats.good} />
+        <StatisticLine text="neutral" value={stats.neutral} />
+        <StatisticLine text="bad" value={stats.bad} />
+        <StatisticLine text="all" value={total} />
+        <StatisticLine text="average" value={ave} />
+        <StatisticLine text="positive" value={positivePercent + " %"} />
+      </div>
+    )
   } else {
     return (
       <div>
-        <DisplayStat text="No feedback given" />
+        <StatisticLine text="No feedback given" />
       </div>
     )
   }
-  return (
-    <div>
-      <DisplayStat text="good" stat={stats.good} />
-      <DisplayStat text="neutral" stat={stats.neutral} />
-      <DisplayStat text="bad" stat={stats.bad} />
-      <DisplayStat text="all" stat={total} />
-      <DisplayStat text="average" stat={ave} />
-      <DisplayStat text="positive" stat={positivePercent + " %"} />
-    </div>
-  )
 }
 
 const App = () => {
-  // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  // console.log("good", good)
-  // console.log("bad", bad)
-  // console.log("neutral", neutral)
   const stats = {
     good: good,
     neutral: neutral,
