@@ -1,5 +1,10 @@
 import { useState } from 'react'
 
+const Header = ({text}) => {
+  return (
+    <h3>{text}</h3>
+  )
+}
 
 const Button = ({handleClick, text}) => {
   return (
@@ -9,11 +14,29 @@ const Button = ({handleClick, text}) => {
   )
 } 
 
+const Votes = ({votes}) => {
+  return (
+    <div>has {votes} votes</div>
+  )
+}
+
 const Anecdote = ({text}) => {
   return (
     <div>{text}</div>
   )
 } 
+
+const MostVoted = ({anecdotes, votes}) => {
+  var highest = 0
+  for(let i = 0; i < Object.keys(votes).length; i++) {
+    if (votes[i] > votes[highest]) {
+      highest = i
+    }
+  }
+  return (
+    <div>{anecdotes[highest]}</div>
+  )
+}
 
 const App = () => {
   const anecdotes = [
@@ -42,15 +65,16 @@ const App = () => {
     copy[index] += 1
     setVotes(copy)
   }
-  console.log("votes", votes)
-  console.log("selected", selected)
-
 
   return (
     <div>
+      <Header text="Anecdote of the day" />
       <Anecdote text={anecdotes[selected]} />
+      <Votes votes={votes[selected]} />
       <Button handleClick={() => updateVotes(selected)} text="vote" />
       <Button handleClick={randomSelected} text="next anecdote" />
+      <Header text="Anecdote with most votes" />
+      <MostVoted anecdotes={anecdotes} votes={votes} />
     </div>
   )
 }
