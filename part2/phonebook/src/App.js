@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const Header = ({text}) => {
   return <h2>{text}</h2>
@@ -46,26 +47,19 @@ const Add = (props) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { 
-      id: 0,
-      name: 'Arto Hellas',
-      number: '123-456-7890'
-    },
-    { 
-      id: 1,
-      name: 'Barto Hellas',
-      number: '123-456-7890'
-    },
-    { 
-      id: 2,
-      name: 'Banto Hellas',
-      number: '123-456-7890'
-    },
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(resp => {
+        console.log('promise fulfilled', resp)
+        setPersons(resp.data)
+      })
+  }, [])
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -85,7 +79,7 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     } else {
       const person = {
-        id: persons.length,
+        id: persons.length + 1,
         name: newName,
         number: newNumber,
       }
