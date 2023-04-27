@@ -50,10 +50,22 @@ const Add = (props) => {
   )
 }
 
-const Notification = ({message}) => {
+const SuccessNotification = ({message}) => {
   if (message) {
     return (
       <div className='success'>
+        {message}
+      </div>
+    )
+  } else {
+    return null
+  }
+}
+
+const FailureNotification = ({message}) => {
+  if (message) {
+    return (
+      <div className='failure'>
         {message}
       </div>
     )
@@ -67,7 +79,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
-  const [notification, setNotification] = useState('')
+  const [successNotification, setSuccessNotification] = useState('')
+  const [failureNotification, setFailureNotification] = useState('')
   useEffect(() => {
     personService.getAll()
       .then(resp => { 
@@ -90,8 +103,11 @@ const App = () => {
     if (deletePerson) {
       personService
         .deleteNumber(id)
-        .then(setPersons(persons.filter(p => p.id.toString() !== id.toString())))
-        .catch(err => console.log(err))
+        .then(resp => { 
+          setPersons(persons.filter(p => p.id.toString() !== id.toString()))
+          notifySuccess(`Deleted ${person.name}`)
+        })
+        .catch(() => notifyFailure(`Could not delete ${person.name}`))
     }
   }
 
@@ -99,10 +115,17 @@ const App = () => {
     setSearchValue(event.target.value)
   }
 
-  const notify = (msg) => {
-      setNotification(msg)
+  const notifySuccess = (msg) => {
+      setSuccessNotification(msg)
       setTimeout(() => {
-        setNotification(null)
+        setSuccessNotification(null)
+      }, 2000)
+  }
+
+  const notifyFailure = (msg) => {
+      setFailureNotification(msg)
+      setTimeout(() => {
+        setFailureNotification(null)
       }, 2000)
   }
 
@@ -121,8 +144,9 @@ const App = () => {
             setPersons(persons.filter(p => p.id !== existingPerson.id).concat(resp))
             setNewName('')
             setNewNumber('')
-            notify(`Updated ${resp.name}`)
+            notifySuccess(`Updated ${resp.name}`)
           })
+          .catch(()=> notifyFailure(`Could not update ${person.name}`))
       }
     } else {
       const person = {
@@ -134,14 +158,16 @@ const App = () => {
           setPersons(persons.concat(resp))
           setNewName('')
           setNewNumber('')
-          notify(`Added ${resp.name}`)
+          notifySuccess(`Added ${resp.name}`)
         })
+        .catch(() => notifyFailure(`Could not create ${person.name}`))
     }
   }
 
   return (
     <div>
-      <Notification message={notification} />
+      <SuccessNotification message={successNotification} />
+      <FailureNotification message={failureNotification} />
       <Filter onChange={handleSearchChange} search={searchValue} />
       <Add 
         addPerson={addPerson} 
