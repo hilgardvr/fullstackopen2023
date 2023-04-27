@@ -5,7 +5,7 @@ const Header = ({text}) => {
   return <h2>{text}</h2>
 }
 
-const Numbers = ({persons, search}) => {
+const Numbers = ({persons, search, handleDelete}) => {
   const filtered = persons.filter(
     p => p.name.toLowerCase().startsWith(search.toLowerCase())
   )
@@ -13,7 +13,10 @@ const Numbers = ({persons, search}) => {
     <>
       <Header text={"Numbers"} />
       {filtered.map(person => 
-        <div key={person.id}>{person.name} {person.number}</div>)}
+        <div key={person.id}>
+          {person.name} {person.number} 
+          <button onClick={handleDelete} value={person.id}>delete</button>
+        </div>)}
     </>
   )
 }
@@ -52,10 +55,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
   useEffect(() => {
-    console.log('effect')
+    // console.log('effect')
     personService.getAll()
       .then(resp => { 
-        console.log('received;')
+        // console.log('received;')
         setPersons(resp)
       })
   }, [])
@@ -66,6 +69,18 @@ const App = () => {
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
+  }
+
+  const deletePerson = (event) => {
+    const id = event.target.value
+    const person = persons.find(p => p.id == id)
+    const deletePerson = window.confirm(`Do you want to delete ${person.name}`)
+    if (deletePerson) {
+      personService
+        .deleteNumber(id)
+        .then(setPersons(persons.filter(p => p.id != id)))
+        .catch(err => console.log(err))
+    }
   }
 
   const handleSearchChange = (event) => {
@@ -100,7 +115,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
         newNumber={newNumber} 
       />
-      <Numbers persons={persons} search={searchValue} />
+      <Numbers persons={persons} search={searchValue} handleDelete={deletePerson} />
     </div>
   )
 }

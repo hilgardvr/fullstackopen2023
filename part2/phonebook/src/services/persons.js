@@ -1,26 +1,42 @@
 import axios from 'axios'
 
-function getAll() {
+const baseUrl = 'http://localhost:3001/persons'
+
+const getAll = () =>  {
     return axios
-        .get('http://localhost:3001/persons')
+        .get(baseUrl)
         .then( (resp) => {
-            console.log('promise fulfilled', resp)
             return resp.data
         })
 }
 
+const get = (id) => {
+    return axios
+        .get(`${baseUrl}/${id}`)
+        .then(resp => resp.data)
+}
+
 const create = (person) => {
     return axios
-        .post(`http://localhost:3001/persons`, person)
+        .post(baseUrl, person)
         .then( (resp) => {
-            console.log('promise fulfilled', resp)
+            return resp.data
+        })
+}
+
+const deleteNumber = (id) => {
+    return axios
+        .delete(`${baseUrl}/${id}`)
+        .then(resp => {
             return resp.data
         })
 }
 
 const personService = {
-    getAll: getAll,
-    create: create
-};
+    get,
+    getAll,
+    create,
+    deleteNumber,
+}
 
 export default personService;
