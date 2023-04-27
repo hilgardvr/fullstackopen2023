@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const Header = ({text}) => {
   return <h2>{text}</h2>
@@ -49,16 +50,27 @@ const Add = (props) => {
   )
 }
 
+const Notification = ({message}) => {
+  if (message) {
+    return (
+      <div className='success'>
+        {message}
+      </div>
+    )
+  } else {
+    return null
+  }
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
+  const [notification, setNotification] = useState('')
   useEffect(() => {
-    // console.log('effect')
     personService.getAll()
       .then(resp => { 
-        // console.log('received;')
         setPersons(resp)
       })
   }, [])
@@ -87,6 +99,13 @@ const App = () => {
     setSearchValue(event.target.value)
   }
 
+  const notify = (msg) => {
+      setNotification(msg)
+      setTimeout(() => {
+        setNotification(null)
+      }, 2000)
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     const existingPerson = persons.find(p => p.name === newName)
@@ -102,6 +121,7 @@ const App = () => {
             setPersons(persons.filter(p => p.id !== existingPerson.id).concat(resp))
             setNewName('')
             setNewNumber('')
+            notify(`Updated ${resp.name}`)
           })
       }
     } else {
@@ -114,12 +134,14 @@ const App = () => {
           setPersons(persons.concat(resp))
           setNewName('')
           setNewNumber('')
+          notify(`Added ${resp.name}`)
         })
     }
   }
 
   return (
     <div>
+      <Notification message={notification} />
       <Filter onChange={handleSearchChange} search={searchValue} />
       <Add 
         addPerson={addPerson} 
@@ -128,7 +150,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
         newNumber={newNumber} 
       />
-      <Numbers persons={persons} search={searchValue} handleDelete={deletePerson} />
+      <Numbers persons={persons} search={searchValue} handleDelete={deletePerson}/>
     </div>
   )
 }
