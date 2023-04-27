@@ -73,12 +73,12 @@ const App = () => {
 
   const deletePerson = (event) => {
     const id = event.target.value
-    const person = persons.find(p => p.id == id)
+    const person = persons.find(p => p.id.toString() === id.toString())
     const deletePerson = window.confirm(`Do you want to delete ${person.name}`)
     if (deletePerson) {
       personService
         .deleteNumber(id)
-        .then(setPersons(persons.filter(p => p.id != id)))
+        .then(setPersons(persons.filter(p => p.id.toString() !== id.toString())))
         .catch(err => console.log(err))
     }
   }
@@ -89,8 +89,21 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.find(p => p.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const existingPerson = persons.find(p => p.name === newName)
+    if (existingPerson) {
+      const replace = window.confirm(`Do you want to replace ${newName}`)
+      if (replace) {
+        const person = {
+          name: newName,
+          number: newNumber,
+        }
+        personService.update(existingPerson.id, person)
+          .then(resp => {
+            setPersons(persons.filter(p => p.id !== existingPerson.id).concat(resp))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
     } else {
       const person = {
         name: newName,

@@ -24,6 +24,12 @@ const create = (person) => {
         })
 }
 
+const update = (existingId, person) => {
+    return axios
+        .put(`${baseUrl}/${existingId}`, person)
+        .then(resp => resp.data)
+}
+
 const deleteNumber = (id) => {
     return axios
         .delete(`${baseUrl}/${id}`)
@@ -36,6 +42,7 @@ const personService = {
     get,
     getAll,
     create,
+    update,
     deleteNumber,
 }
 
