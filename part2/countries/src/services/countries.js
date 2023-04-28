@@ -7,13 +7,16 @@ const getAll = () =>  {
    return axios 
     .get(`${baseUrl}/all`)
     .then( (resp) => {
+        console.log(resp.data)
         return resp.data
     })
 }
 
-export default {
+const obj = {
     getAll
 }
+
+export default obj
 
 // const dummy = Promise.resolve([{
 //     "name": {
