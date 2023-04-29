@@ -3,11 +3,11 @@ import axios from 'axios'
 const baseUrl = 'https://restcountries.com/v3.1'
 
 const getAll = () =>  {
-//    return dummy
+  //  return dummy
    return axios 
     .get(`${baseUrl}/all`)
     .then( (resp) => {
-        console.log(resp.data)
+        // console.log(resp.data)
         return resp.data
     })
 }
