@@ -66,7 +66,7 @@ const Display = ({countries, shownCountries, setShownCountries, weather}) => {
               isShown={isShown} 
               i={i} 
               setShownCountries={setShownCountries} 
-              weather={weather}
+              weather={shownCountries.length === 1 ? weather : null}
             />)
         })}
       </>
@@ -122,8 +122,9 @@ function App() {
     const filtered = countries.filter(country => {
       return country.name.official.toLowerCase().includes(searchValue.toLowerCase())
     })
-    if (filtered.length === 1) {
-      handleLocationChange(filtered[0].latlng[0], filtered[0].latlng[1])
+    if (shownCountries.length === 1) {
+      const shown = filtered.filter(country => country.name.official.toLowerCase() === shownCountries[0].toLowerCase())
+      handleLocationChange(shown[0].latlng[0], shown[0].latlng[1])
     } else {
       handleLocationChange(null, null)
     }
