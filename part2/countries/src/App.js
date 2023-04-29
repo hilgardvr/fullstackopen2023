@@ -10,7 +10,6 @@ const Search = ({onChange}) => {
 }
 
 const DisplayCountry = ({element, isShown, i, setShownCountries, weather}) => {
-  console.log('weather', weather)
   return (
     <div key={i}>
       <h4>{element.name.official}</h4>
@@ -40,15 +39,16 @@ const DisplayCountry = ({element, isShown, i, setShownCountries, weather}) => {
 }
 
 
-const Display = ({search, countries, shownCountries, setShownCountries, weather, handleLocationChange}) => {
-  const filtered = countries.filter(country => {
-    return country.name.official.toLowerCase().includes(search.toLowerCase())
-  })
-  if (filtered.length === 1) {
-    console.log('lats', filtered[0].latlng[0], filtered[0].latlng[1])
-    handleLocationChange(filtered[0].latlng[0], filtered[0].latlng[1])
+const Display = ({countries, shownCountries, setShownCountries, weather}) => {
+
+  if (!countries) {
+    return (
+    <div>
+      No country data 
+    </div>
+    )
   }
-  if (filtered.length > 10) {
+  if (countries.length > 10) {
     return (
     <div>
       Please refine your search - too many options
@@ -57,8 +57,7 @@ const Display = ({search, countries, shownCountries, setShownCountries, weather,
   } else {
     return (
       <>
-        {filtered.map((element, i) => {
-          console.log(element)
+        {countries.map((element, i) => {
           const isShown = shownCountries.includes(element.name.official)
           return (
             <DisplayCountry 
@@ -86,7 +85,6 @@ function App() {
   useEffect(() => {
     countryService.getAll()
       .then(resp => {
-        // console.log(resp)
         setCountries(resp)
       })
       .catch(err => console.log(err))
@@ -101,17 +99,10 @@ function App() {
   }, [coords])
 
   const handleLocationChange = (lat, lon) => {
-    console.log('hanldeLoca', lat, lon)
     const currentCoords = {lat: lat, lon: lon}
     if (!coords || currentCoords.lat !== coords.lat || currentCoords.lon !== coords.lon) {
       setCoords(currentCoords)
     }
-    // weatherService.getWeather(lat, lon)
-    //   .then(w => {
-    //     console.log('res', w)
-    //     setWeather(w)
-    //   })
-    //   .catch(err => console.log(err))
   }
 
   const handleSearchChange = (event) => {
@@ -127,16 +118,26 @@ function App() {
     }
   }
 
+  const filterCountries = () => {
+    const filtered = countries.filter(country => {
+      return country.name.official.toLowerCase().includes(searchValue.toLowerCase())
+    })
+    if (filtered.length === 1) {
+      handleLocationChange(filtered[0].latlng[0], filtered[0].latlng[1])
+    } else {
+      handleLocationChange(null, null)
+    }
+    return filtered
+  }
+
   return (
     <div>
       <Search onChange={handleSearchChange}/>
       <Display 
-        search={searchValue} 
-        countries={countries} 
+        countries={filterCountries()}
         shownCountries={shownCountries}
         setShownCountries={handleShownCountyChange}
         weather={weather}
-        handleLocationChange={handleLocationChange}
       />
     </div>
   );

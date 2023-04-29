@@ -13,7 +13,7 @@ const getWeather = (lat, lng) =>  {
     return axios
         .get(`${baseUrl}?key=${apiKey}&q=${lat},${lng}`)
         .then(resp => {
-            console.log(resp)
+            // console.log(resp)
             return resp.data
         })
   //  return axios 
