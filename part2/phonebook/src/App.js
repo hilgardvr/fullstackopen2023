@@ -107,7 +107,7 @@ const App = () => {
           setPersons(persons.filter(p => p.id.toString() !== id.toString()))
           notifySuccess(`Deleted ${person.name}`)
         })
-        .catch(() => notifyFailure(`Could not delete ${person.name}`))
+        .catch(err => notifyFailure(`Could not delete ${person.name}: ${err.response.data.error}`))
     }
   }
 
@@ -126,7 +126,7 @@ const App = () => {
       setFailureNotification(msg)
       setTimeout(() => {
         setFailureNotification(null)
-      }, 2000)
+      }, 3000)
   }
 
   const addPerson = (event) => {
@@ -146,7 +146,9 @@ const App = () => {
             setNewNumber('')
             notifySuccess(`Updated ${resp.name}`)
           })
-          .catch(()=> notifyFailure(`Could not update ${person.name}`))
+          .catch(err => {
+            notifyFailure(`Could not update ${person.name}: ${err.response.data.error}`)
+          })
       }
     } else {
       const person = {
@@ -160,7 +162,7 @@ const App = () => {
           setNewNumber('')
           notifySuccess(`Added ${resp.name}`)
         })
-        .catch(() => notifyFailure(`Could not create ${person.name}`))
+        .catch(err => notifyFailure(`Could not create ${person.name}: ${err.response.data.error}`))
     }
   }
 
