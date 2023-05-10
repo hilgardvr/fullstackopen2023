@@ -41,9 +41,31 @@ const mostBlogs = (blogs) => {
     return returnVal
 }
 
+const mostLikes = (blogs) => {
+    let authors = {}
+    blogs.forEach(element => {
+        if (authors.hasOwnProperty(element.author)) {
+            authors[element.author] += element.likes
+        } else {
+            authors[element.author] = element.likes
+        }
+    });
+    let returnVal = {}
+    for (const [key, val] of Object.entries(authors)) {
+        if (returnVal.blogs && returnVal.blogs > val) {
+            continue
+        } else {
+            returnVal.author = key
+            returnVal.likes = val
+        }
+    }
+    return returnVal
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
