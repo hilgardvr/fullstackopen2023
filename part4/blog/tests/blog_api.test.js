@@ -59,6 +59,17 @@ test('add new blog with post', async () => {
     expect(found.title).toBe(newTitle)
 })
 
+test('empty likes default to 0', async () => {
+    const b = {...initBlogs[0]}
+    delete b.likes
+    const addedBlog = (await api
+        .post('/api/blogs')
+        .send(b))
+        .body
+    const found = await Blog.findById(addedBlog.id)
+    expect(found.likes).toBe(0)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
