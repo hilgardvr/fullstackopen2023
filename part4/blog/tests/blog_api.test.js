@@ -45,6 +45,20 @@ test('identifier property of id', async () => {
     expect(first.id).toBeDefined()
 })
 
+test('add new blog with post', async () => {
+    const b = {...initBlogs[0]}
+    const newTitle = "New title 99" 
+    b.title = newTitle
+    const newBlog = new Blog(b)
+    const addedBlog = await api
+        .post('/api/blogs')
+        .send(b)
+    const all = (await api.get('/api/blogs')).body
+    expect(all).toHaveLength(3)
+    const found = all.find(b => b.id === addedBlog.body.id)
+    expect(found.title).toBe(newTitle)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
