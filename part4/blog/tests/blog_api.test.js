@@ -15,7 +15,7 @@ const initBlogs = [
         "title": "Test Title1",
         "author": "John Galt",
         "url": "www.johngalt.com",
-        "likes": 10,
+        "likes": 0,
     }
 ]
 
@@ -96,11 +96,25 @@ test('delete existing', async () => {
 test('delete invalid id', async () => {
     const all = (await api.get('/api/blogs')).body
     expect(all).toHaveLength(initBlogs.length)
-    // await api.delete(`/api/blogs/645755b121f1e4d3ac8154cd`)
     await api.delete(`/api/blogs/invalid-id`)
         .expect(400)
     const allAfterDelete = (await api.get('/api/blogs')).body
     expect(allAfterDelete).toHaveLength(initBlogs.length)
+})
+
+test('update valid', async () => {
+    const all = (await api.get('/api/blogs')).body
+    const toUpdate = all[0]
+    const likes = {
+        likes: toUpdate.likes + 1
+    }
+    await api.put(`/api/blogs/${toUpdate.id}`)
+        .send(likes)
+        .expect(200)
+    const afterUpdate = (await api.get('/api/blogs'))
+        .body
+        .find(b => b.id === toUpdate.id)
+    expect(afterUpdate.likes).toBe(toUpdate.likes + 1)
 })
 
 afterAll(async () => {
