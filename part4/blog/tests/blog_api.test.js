@@ -41,7 +41,6 @@ test('all blogs are returned', async () => {
 test('identifier property of id', async () => {
     const resp = await api.get('/api/blogs')
     const first = resp.body[0]
-    console.log("first", first)
     expect(first.id).toBeDefined()
 })
 
@@ -68,6 +67,21 @@ test('empty likes default to 0', async () => {
         .body
     const found = await Blog.findById(addedBlog.id)
     expect(found.likes).toBe(0)
+})
+
+test('empty title or url 400', async () => {
+    const emptyUrl = {...initBlogs[0]}
+    delete emptyUrl.url
+    await api
+        .post('/api/blogs')
+        .send(emptyUrl)
+        .expect(400)
+    const emptyTitle = {...initBlogs[0]}
+    delete emptyTitle.title
+    await api
+        .post('/api/blogs')
+        .send(emptyTitle)
+        .expect(400)
 })
 
 afterAll(async () => {
