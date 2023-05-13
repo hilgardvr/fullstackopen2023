@@ -84,6 +84,25 @@ test('empty title or url 400', async () => {
         .expect(400)
 })
 
+test('delete existing', async () => {
+    const all = (await api.get('/api/blogs')).body
+    expect(all).toHaveLength(initBlogs.length)
+    await api.delete(`/api/blogs/${all[0].id}`)
+        .expect(204)
+    const allAfterDelete = (await api.get('/api/blogs')).body
+    expect(allAfterDelete).toHaveLength(initBlogs.length - 1)
+})
+
+test('delete invalid id', async () => {
+    const all = (await api.get('/api/blogs')).body
+    expect(all).toHaveLength(initBlogs.length)
+    // await api.delete(`/api/blogs/645755b121f1e4d3ac8154cd`)
+    await api.delete(`/api/blogs/invalid-id`)
+        .expect(400)
+    const allAfterDelete = (await api.get('/api/blogs')).body
+    expect(allAfterDelete).toHaveLength(initBlogs.length)
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
