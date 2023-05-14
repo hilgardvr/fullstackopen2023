@@ -3,16 +3,10 @@ const app = require('../app')
 const supertest = require('supertest')
 const api = supertest(app)
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
+const Blog = require('../models/blog')
+const helper = require('./test_helper')
 
-
-beforeEach(async () => {
-    await User.deleteMany({})
-    const passwordHash = await bcrypt.hash('secret123', 10)
-    const user = new User({username: 'root', passwordHash: passwordHash})
-    await user.save()
-})
-
+beforeEach(helper.beforeEach)
 
 test('creation succeeds with new username', async () => {
     const usersBefore = await User.find({})
@@ -26,10 +20,28 @@ test('creation succeeds with new username', async () => {
         .expect(201)
         .expect('Content-Type', /application\/json/)
     const usersAfter = await User.find({})
-    expect(usersAfter).toHaveLength(2)
+    expect(usersAfter).toHaveLength(usersBefore.length + 1)
     const userNames = usersAfter.map(u => u.username)
     expect(userNames).toContain(newUser.username)
 })
+
+test("user blogs returned", async () => {
+    const b = {...helper.initBlogs[0]}
+    const newTitle = "New title 99" 
+    b.title = newTitle
+    const newBlog = new Blog(b)
+    const resp = await api
+        .post('/api/blogs')
+        .send(b)
+        .expect(201)
+    const allUsers = await api
+        .get('/api/users')
+    const userWithBlog = allUsers.body.find( user => 
+        user.blogs.find(ub => ub.id == resp.body.id)
+    )
+    expect(userWithBlog).toBeDefined()
+})
+
 
 test('invalid password fails with 400', async () => {
     const usersBefore = await User.find({})

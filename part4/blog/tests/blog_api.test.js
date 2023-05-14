@@ -3,29 +3,10 @@ const app = require('../app')
 const supertest = require('supertest')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const helper = require('./test_helper')
 
-const initBlogs = [
-    {
-        "title": "Test Title",
-        "author": "John Galt",
-        "url": "www.johngalt.com",
-        "likes": 10,
-    },
-    {
-        "title": "Test Title1",
-        "author": "John Galt",
-        "url": "www.johngalt.com",
-        "likes": 0,
-    }
-]
-
-beforeEach(async () => {
-    await Blog.deleteMany({})
-    const blogs = initBlogs.map(b => new Blog(b))
-    const promiseBlogs = blogs.map(b => b.save())
-    await Promise.all(promiseBlogs)
-})
-
+beforeEach(helper.beforeEach)
 
 test('blogs are returned as json', async () => {
     await api.get('/api/blogs')
@@ -45,7 +26,7 @@ test('identifier property of id', async () => {
 })
 
 test('add new blog with post', async () => {
-    const b = {...initBlogs[0]}
+    const b = {...helper.initBlogs[0]}
     const newTitle = "New title 99" 
     b.title = newTitle
     const newBlog = new Blog(b)
@@ -56,10 +37,12 @@ test('add new blog with post', async () => {
     expect(all).toHaveLength(3)
     const found = all.find(b => b.id === addedBlog.body.id)
     expect(found.title).toBe(newTitle)
+    expect(found.userId).toBeDefined()
 })
 
+
 test('empty likes default to 0', async () => {
-    const b = {...initBlogs[0]}
+    const b = {...helper.initBlogs[0]}
     delete b.likes
     const addedBlog = (await api
         .post('/api/blogs')
@@ -70,13 +53,13 @@ test('empty likes default to 0', async () => {
 })
 
 test('empty title or url 400', async () => {
-    const emptyUrl = {...initBlogs[0]}
+    const emptyUrl = {...helper.initBlogs[0]}
     delete emptyUrl.url
     await api
         .post('/api/blogs')
         .send(emptyUrl)
         .expect(400)
-    const emptyTitle = {...initBlogs[0]}
+    const emptyTitle = {...helper.initBlogs[0]}
     delete emptyTitle.title
     await api
         .post('/api/blogs')
@@ -86,20 +69,20 @@ test('empty title or url 400', async () => {
 
 test('delete existing', async () => {
     const all = (await api.get('/api/blogs')).body
-    expect(all).toHaveLength(initBlogs.length)
+    expect(all).toHaveLength(helper.initBlogs.length)
     await api.delete(`/api/blogs/${all[0].id}`)
         .expect(204)
     const allAfterDelete = (await api.get('/api/blogs')).body
-    expect(allAfterDelete).toHaveLength(initBlogs.length - 1)
+    expect(allAfterDelete).toHaveLength(helper.initBlogs.length - 1)
 })
 
 test('delete invalid id', async () => {
     const all = (await api.get('/api/blogs')).body
-    expect(all).toHaveLength(initBlogs.length)
+    expect(all).toHaveLength(helper.initBlogs.length)
     await api.delete(`/api/blogs/invalid-id`)
         .expect(400)
     const allAfterDelete = (await api.get('/api/blogs')).body
-    expect(allAfterDelete).toHaveLength(initBlogs.length)
+    expect(allAfterDelete).toHaveLength(helper.initBlogs.length)
 })
 
 test('update valid', async () => {
