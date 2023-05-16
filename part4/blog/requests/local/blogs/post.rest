@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJpZCI6IjY0NjBhY2I3ZjEzMzEwYjNiMWIxNTgwNyIsImlhdCI6MTY4NDIxMjUxM30.I0falxJtLbgH5P1hNMT3MnBQa_Ile2lmiWckeXL6W3g
 
 {
-  "title": "Test Title With Auth2",
+  "title": "Test Title With Auth3",
   "author": "John Galt",
   "url": "www.johngalt.com",
   "likes": 2

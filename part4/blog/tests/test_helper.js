@@ -24,6 +24,14 @@ const initUsers = [
     }
 ]
 
+const getLoginToken = async (api) => {
+    await api.post('/api/users')
+        .send({"username": "username", "name": "name", "password": "password"})
+    const login = await api.post('/api/login')
+        .send({"username": "username", "password": "password"})
+    return login.body.token
+}
+
 const beforeEach = async () => {
     await Blog.deleteMany({})
     await User.deleteMany({})
@@ -36,5 +44,5 @@ const beforeEach = async () => {
 }
 
 module.exports = {
-    initBlogs, initUsers, beforeEach
+    initBlogs, initUsers, beforeEach, getLoginToken
 }
