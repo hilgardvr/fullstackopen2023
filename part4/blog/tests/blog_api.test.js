@@ -82,19 +82,38 @@ describe('blog tests',  () => {
             .expect(401)
     })
 
-    test('delete existing', async () => {
+    test('delete not auth 401', async () => {
         const all = (await api.get('/api/blogs')).body
         expect(all).toHaveLength(helper.initBlogs.length)
         await api.delete(`/api/blogs/${all[0].id}`)
+            .expect(401)
+        const allAfterDelete = (await api.get('/api/blogs')).body
+        expect(allAfterDelete).toHaveLength(helper.initBlogs.length)
+    })
+
+    test('delete existing', async () => {
+        const b = {...helper.initBlogs[0]}
+        const token = await helper.getLoginToken(api)
+        const addedBlog = (await api
+            .post('/api/blogs')
+            .set('Authorization', 'Bearer ' + token)
+            .send(b))
+            .body
+        const allBeforeDelete = (await api.get('/api/blogs')).body
+        expect(allBeforeDelete).toHaveLength(helper.initBlogs.length + 1)
+        await api.delete(`/api/blogs/${addedBlog.id}`)
+            .set('Authorization', 'Bearer ' + token)
             .expect(204)
         const allAfterDelete = (await api.get('/api/blogs')).body
-        expect(allAfterDelete).toHaveLength(helper.initBlogs.length - 1)
+        expect(allAfterDelete).toHaveLength(helper.initBlogs.length)
     })
 
     test('delete invalid id', async () => {
         const all = (await api.get('/api/blogs')).body
         expect(all).toHaveLength(helper.initBlogs.length)
+        const token = await helper.getLoginToken(api)
         await api.delete(`/api/blogs/invalid-id`)
+            .set('Authorization', 'Bearer ' + token)
             .expect(400)
         const allAfterDelete = (await api.get('/api/blogs')).body
         expect(allAfterDelete).toHaveLength(helper.initBlogs.length)

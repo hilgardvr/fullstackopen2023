@@ -1,5 +1,7 @@
+const User = require('../models/user')
 
-const tokenExtractor = (req, re, next) => {
+
+const tokenExtractor = (req, res, next) => {
   const auth = req.get('authorization')
   if (auth && auth.startsWith('Bearer ')) {
     req.token = auth.replace('Bearer ', '')
@@ -16,6 +18,9 @@ const errorHandler = (error, req, res, next) => {
   }
   if (error && error.name == "JsonWebTokenError") {
     return res.status(401).send({error: error.message})
+  }
+  if (error) {
+    return res.status(500).send({error: error.message})
   }
   next(error)
 }

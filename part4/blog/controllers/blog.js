@@ -16,9 +16,7 @@ blogRouter.post('/', async (request, response, next) => {
     const blog = new Blog({title, url, likes, userId: user})
     const err = blog.validateSync()
     if (err) {
-      return response.status(400).json({
-        error: err.message
-      })
+      return next(err)
     }
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
@@ -29,25 +27,30 @@ blogRouter.post('/', async (request, response, next) => {
   }
 })
 
-blogRouter.delete('/:id', async (request, response) => {
-  const id = request.params.id.toString()
+blogRouter.delete('/:id', async (request, response, next) => {
   try {
-    await Blog.findByIdAndDelete(id)
-    response.status(204).end()
+    const blogId = request.params.id.toString()
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    const blog = await Blog.findById(blogId)
+    const user = await User.findById(decodedToken.id)
+    if (blog.userId._id.toString() == decodedToken.id.toString()) {
+        await blog.deleteOne()
+        user.blogs = user.blogs.filter(blog => blog._id.toString() != blogId)
+        await user.save()
+    } 
+    response.status(204).json(blog)
   } catch (ex) {
-    console.log(`Error deleting: `, ex)
-    response.status(400).end()
+    next(ex)
   }
 })
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', async (request, response, next) => {
   const id = request.params.id.toString()
   try {
     const blog = await Blog.findByIdAndUpdate(id, request.body, { new: true, runValidators: true, context: 'query' })
     return response.json(blog)
   } catch (ex) {
-    console.log(ex)
-    return response.status(500).end()
+    next(ex)
   }
 })
 
