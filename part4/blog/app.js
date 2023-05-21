@@ -7,7 +7,20 @@ const blogRouter = require('./controllers/blog')
 const userRouter = require('./controllers/user')
 const loginRouter = require('./controllers/login')
 const middleware = require('./middleware/middleware')
+const morgan = require('morgan')
 app.use(cors())
+app.use(morgan(function (tokens, req, res) {
+  const method = req.method
+  const body = req.body ? JSON.stringify(req.body) : ""
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    body
+  ].join(' ')
+}))
 app.use(express.json())
 app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
