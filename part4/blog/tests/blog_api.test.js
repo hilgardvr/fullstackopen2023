@@ -5,9 +5,11 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 
-beforeEach(helper.beforeEach)
 
 describe('blog tests',  () => {
+
+    beforeEach(helper.beforeEach)
+
     test('blogs are returned as json', async () => {
         await api.get('/api/blogs')
             .expect(200)
@@ -109,13 +111,19 @@ describe('blog tests',  () => {
     })
 
     test('delete invalid id', async () => {
-        const all = (await api.get('/api/blogs')).body
-        expect(all).toHaveLength(helper.initBlogs.length)
         const token = await helper.getLoginToken(api)
+        const all = (
+            await api.get('/api/blogs')
+                .set('Authorization', 'Bearer ' + token)
+        ).body
+        expect(all).toHaveLength(helper.initBlogs.length)
         await api.delete(`/api/blogs/invalid-id`)
             .set('Authorization', 'Bearer ' + token)
             .expect(400)
-        const allAfterDelete = (await api.get('/api/blogs')).body
+        const allAfterDelete = (
+            await api.get('/api/blogs')
+                .set('Authorization', 'Bearer ' + token)
+        ).body
         expect(allAfterDelete).toHaveLength(helper.initBlogs.length)
     })
 
