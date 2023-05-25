@@ -12,12 +12,8 @@ const post = async (blog, userToken) => {
       Authorization: `Bearer ${userToken}`
     }
   }
-  try {
-    const response = await axios.post(baseUrl, blog, config)
-    return response.data
-  } catch (ex) {
-    console.log(ex)
-  }
+  const response = await axios.post(baseUrl, blog, config)
+  return response.data
 }
 
 const exports = {

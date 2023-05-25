@@ -3,13 +3,25 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const Notification = ({message}) => {
+  if (message) {
+    return (
+      <div className='todo'>
+        {message}
+      </div>
+    )
+  } else {
+    return null
+  }
+}
+
 const App = () => {
   const windowUserKey = 'user'
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  // const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -36,11 +48,10 @@ const App = () => {
       setUsername("")
       setPassword("")
     } catch (ex) {
-      console.log(ex)
-      // setErrorMessage('Wrong Credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // })
+      setMessage(`Wrong Credentials`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
     }
   }
   
@@ -52,16 +63,26 @@ const App = () => {
 
   const postBlog = async (event) => {
     event.preventDefault()
-    const resp = await blogService.post({
-      title: title,
-      author: author,
-      url: url,
-    }, user.token)
-    setBlogs(blogs.concat(resp))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    return false
+    try {
+      const resp = await blogService.post({
+        title: title,
+        author: author,
+        url: url,
+      }, user.token)
+      setBlogs(blogs.concat(resp))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setMessage(`Posted new blog: ${resp.title}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
+    } catch (ex) {
+      setMessage(`Failed to post blog`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
+    }
   }
 
   const loginForm = () => {
@@ -113,7 +134,10 @@ const App = () => {
   }
 
   return (
-    <div> { user ? blogsUI() : loginForm() } </div>
+    <div> 
+      <Notification message={message} />
+      { user ? blogsUI() : loginForm() } 
+    </div>
   )
 }
 
