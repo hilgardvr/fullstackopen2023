@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import CreateBlog from './CreateBlog'
 
 const Notification = ({message}) => {
   if (message) {
@@ -22,10 +23,6 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
-  const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -62,31 +59,6 @@ const App = () => {
     setUser(null)
   }
 
-  const postBlog = async (event) => {
-    event.preventDefault()
-    try {
-      const resp = await blogService.post({
-        title: title,
-        author: author,
-        url: url,
-      }, user.token)
-      setBlogs(blogs.concat(resp))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      setCreateBlogVisible(false)
-      setMessage(`Posted new blog: ${resp.title}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
-    } catch (ex) {
-      setMessage(`Failed to post blog`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
-    }
-  }
-
   const loginForm = () => {
     return (
       <div>
@@ -103,32 +75,6 @@ const App = () => {
     )
   }
 
-  const createBlog = () => {
-    const displayCreate = createBlogVisible ? { } : { display: 'none' }
-    const displayButton = createBlogVisible ? { display: 'none' } : { }
-    return (<div>
-      <div style={displayButton}>
-        <button onClick={() => setCreateBlogVisible(true)}>New blog</button>
-      </div>
-      <br/>
-      <div style={displayCreate}>
-        <form onSubmit={postBlog}>
-          <div>
-            title <input type="text" value={title} name="Title" onChange={({target}) => setTitle(target.value)}/>
-          </div>
-          <div>
-            author <input type="text" value={author} name="Author" onChange={({target}) => setAuthor(target.value)}/>
-          </div>
-          <div>
-            url <input type="text" value={url} name="Url" onChange={({target}) => setUrl(target.value)}/>
-          </div>
-        <button type="submit">Post</button>
-        <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
-        </form>
-      </div>
-    </div>)
-  }
-
   const blogsUI = () => {
     return <div>
       <h3>Logged in as {user.username}</h3>
@@ -139,7 +85,7 @@ const App = () => {
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
-      {createBlog()}
+      <CreateBlog user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
     </div>
   }
 
