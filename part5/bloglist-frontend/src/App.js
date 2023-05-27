@@ -25,6 +25,7 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -73,6 +74,7 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      setCreateBlogVisible(false)
       setMessage(`Posted new blog: ${resp.title}`)
       setTimeout(() => {
         setMessage(null)
@@ -102,20 +104,28 @@ const App = () => {
   }
 
   const createBlog = () => {
+    const displayCreate = createBlogVisible ? { } : { display: 'none' }
+    const displayButton = createBlogVisible ? { display: 'none' } : { }
     return (<div>
+      <div style={displayButton}>
+        <button onClick={() => setCreateBlogVisible(true)}>New blog</button>
+      </div>
       <br/>
-      <form onSubmit={postBlog}>
-        <div>
-          title <input type="text" value={title} name="Title" onChange={({target}) => setTitle(target.value)}/>
-        </div>
-        <div>
-          author <input type="text" value={author} name="Author" onChange={({target}) => setAuthor(target.value)}/>
-        </div>
-        <div>
-          url <input type="text" value={url} name="Url" onChange={({target}) => setUrl(target.value)}/>
-        </div>
-      <button type="submit">Post</button>
-      </form>
+      <div style={displayCreate}>
+        <form onSubmit={postBlog}>
+          <div>
+            title <input type="text" value={title} name="Title" onChange={({target}) => setTitle(target.value)}/>
+          </div>
+          <div>
+            author <input type="text" value={author} name="Author" onChange={({target}) => setAuthor(target.value)}/>
+          </div>
+          <div>
+            url <input type="text" value={url} name="Url" onChange={({target}) => setUrl(target.value)}/>
+          </div>
+        <button type="submit">Post</button>
+        <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
+        </form>
+      </div>
     </div>)
   }
 
