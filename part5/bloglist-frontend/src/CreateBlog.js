@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import blogService from './services/blogs'
 
 const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
@@ -8,6 +8,11 @@ const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
     const [url, setUrl] = useState("")
     const displayCreate = createBlogVisible ? { } : { display: 'none' }
     const displayButton = createBlogVisible ? { display: 'none' } : { }
+
+    const cancelCreate = async (event) => {
+        event.preventDefault()
+        setCreateBlogVisible(false)
+    }
 
     const postBlog = async (event) => {
         event.preventDefault()
@@ -49,7 +54,7 @@ const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
             url <input type="text" value={url} name="Url" onChange={({target}) => setUrl(target.value)}/>
           </div>
         <button type="submit">Post</button>
-        <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
+        <button onClick={cancelCreate}>Cancel</button>
         </form>
       </div>
     </div>)
