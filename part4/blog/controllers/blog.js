@@ -10,10 +10,10 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', middleware.userExtractor, async (request, response, next) => {
-  const { title, url, likes } = request.body
+  const { title, author, url, likes } = request.body
   try {
     const user = request.user
-    const blog = new Blog({title, url, likes, userId: user})
+    const blog = new Blog({title, author, url, likes, userId: user})
     const err = blog.validateSync()
     if (err) {
       return next(err)

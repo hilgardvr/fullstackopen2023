@@ -14,7 +14,7 @@ const Blog = ({blog}) => {
     {blog.title}
     <button onClick={()=> setDisplayDetails(!displayDetails)}>{displayDetails ? "hide" : "show"}</button>
     <div style={displayDetails ? blogStyle : { display: 'none'}}>
-      <div>{blog.url}</div>
+      <div>{blog.url} - {blog.author}</div>
       <div>
         {blog.likes}
         <button>like</button>
