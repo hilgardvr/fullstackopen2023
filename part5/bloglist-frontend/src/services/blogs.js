@@ -16,9 +16,15 @@ const post = async (blog, userToken) => {
   return response.data
 }
 
+const put = async (blog) => {
+  const response = await axios.put(`${baseUrl}/${blog.id}`, blog)
+  return response.data
+}
+
 const exports = {
   getAll,
   post,
+  put,
 }
 
 export default exports

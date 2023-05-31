@@ -46,9 +46,10 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response, ne
 blogRouter.put('/:id', async (request, response, next) => {
   const id = request.params.id.toString()
   try {
-    const blog = await Blog.findByIdAndUpdate(id, request.body, { new: true, runValidators: true, context: 'query' })
+    const blog = await Blog.findByIdAndUpdate(id, request.body, { new: true, runValidators: true, context: 'query' }).populate('userId')
     return response.json(blog)
   } catch (ex) {
+    console.log(ex)
     next(ex)
   }
 })

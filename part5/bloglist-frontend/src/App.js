@@ -75,6 +75,20 @@ const App = () => {
     )
   }
 
+  const updateBlog = (blog) => {
+    const updatedBlogs = blogs.map(b => {
+      if (b.id === blog.id) {
+        return {
+          ...b,
+          ...blog
+        }
+      } else {
+        return b
+      }
+    })
+    setBlogs(updatedBlogs)
+  }
+
   const blogsUI = () => {
     return <div>
       <h3>Logged in as {user.username}</h3>
@@ -83,7 +97,7 @@ const App = () => {
       </form>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlogs={updateBlog} />
       )}
       <CreateBlog user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
     </div>
