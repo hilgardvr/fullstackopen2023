@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import blogService from './services/blogs'
+import blogService from '../services/blogs'
 
 const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
     const [createBlogVisible, setCreateBlogVisible] = useState(false)

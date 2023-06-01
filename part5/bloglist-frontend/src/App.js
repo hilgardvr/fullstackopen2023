@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import CreateBlog from './CreateBlog'
+import CreateBlog from './components/CreateBlog'
 
 const Notification = ({message}) => {
   if (message) {
@@ -35,7 +35,7 @@ const App = () => {
     if (!user && userJson) {
       setUser(JSON.parse(userJson))
     } 
-  }, [])
+  }, [user])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -90,13 +90,15 @@ const App = () => {
   }
 
   const blogsUI = () => {
+
+    const sortBlogs = (a, b) => a.likes > b.likes
     return <div>
       <h3>Logged in as {user.username}</h3>
       <form onSubmit={handleLogout}>
         <button type="submit">logout</button>
       </form>
       <h2>blogs</h2>
-      {blogs.map(blog =>
+      {blogs.sort(sortBlogs).map(blog =>
         <Blog key={blog.id} blog={blog} updateBlogs={updateBlog} />
       )}
       <CreateBlog user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
