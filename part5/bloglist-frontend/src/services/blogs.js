@@ -1,9 +1,9 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
-let userTokenTemp = ""
+// let userTokenTemp = ""
 
-const setUserToken = (token) => userTokenTemp = token
+// const setUserToken = (token) => userTokenTemp = token
 
 const getAll = async () => {
   const request = await axios.get(baseUrl)
@@ -39,7 +39,7 @@ const exports = {
   getAll,
   post,
   put,
-  setUserToken,
+  // setUserToken,
   remove
 }
 

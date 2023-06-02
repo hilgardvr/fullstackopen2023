@@ -36,7 +36,7 @@ const App = () => {
       const parsedUserJson = JSON.parse(userJson)
       setUser(parsedUserJson)
     } 
-  }, [])
+  }, [user])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -92,7 +92,7 @@ const App = () => {
 
   const removeBlog = (blog) => {
     const filteredBlogs = blogs.filter(b => {
-      return b.id != blog.id
+      return b.id !== blog.id
     })
     setBlogs(filteredBlogs)
   }
