@@ -33,9 +33,10 @@ const App = () => {
   useEffect(() => {
     const userJson = window.localStorage.getItem(windowUserKey)
     if (!user && userJson) {
-      setUser(JSON.parse(userJson))
+      const parsedUserJson = JSON.parse(userJson)
+      setUser(parsedUserJson)
     } 
-  }, [user])
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -89,6 +90,14 @@ const App = () => {
     setBlogs(updatedBlogs)
   }
 
+  const removeBlog = (blog) => {
+    const filteredBlogs = blogs.filter(b => {
+      return b.id != blog.id
+    })
+    setBlogs(filteredBlogs)
+  }
+
+
   const blogsUI = () => {
 
     const sortBlogs = (a, b) => a.likes > b.likes
@@ -99,7 +108,7 @@ const App = () => {
       </form>
       <h2>blogs</h2>
       {blogs.sort(sortBlogs).map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlogs={updateBlog} />
+        <Blog key={blog.id} blog={blog} removeBlog={removeBlog} updateBlogs={updateBlog} user={user} setMesssage={setMessage}/>
       )}
       <CreateBlog user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
     </div>
