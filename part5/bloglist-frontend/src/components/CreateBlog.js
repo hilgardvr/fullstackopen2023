@@ -2,11 +2,11 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
+const CreateBlog = ({ user, blogs, setBlogs, setMessage }) => {
     const [createBlogVisible, setCreateBlogVisible] = useState(false)
-    const [title, setTitle] = useState("")
-    const [author, setAuthor] = useState("")
-    const [url, setUrl] = useState("")
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
     const displayCreate = createBlogVisible ? { } : { display: 'none' }
     const displayButton = createBlogVisible ? { display: 'none' } : { }
 
@@ -22,8 +22,7 @@ const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
                 title: title,
                 author: author,
                 url: url,
-                }, user.token
-            )
+            }, user.token)
             setBlogs(blogs.concat(resp))
             setTitle('')
             setAuthor('')
@@ -31,7 +30,7 @@ const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
             setCreateBlogVisible(false)
             setMessage(`Posted new blog: ${resp.title}`)
         } catch (ex) {
-            setMessage(`Failed to post blog`)
+            setMessage('Failed to post blog')
         }
         setTimeout(() => {
             setMessage(null)
@@ -39,33 +38,33 @@ const CreateBlog = ({user, blogs, setBlogs, setMessage}) => {
     }
 
     return (<div>
-      <div style={displayButton}>
-        <button onClick={() => setCreateBlogVisible(true)}>New blog</button>
-      </div>
-      <br/>
-      <div style={displayCreate}>
-        <form onSubmit={postBlog}>
-          <div>
-            title <input type="text" value={title} name="Title" onChange={({target}) => setTitle(target.value)}/>
-          </div>
-          <div>
-            author <input type="text" value={author} name="Author" onChange={({target}) => setAuthor(target.value)}/>
-          </div>
-          <div>
-            url <input type="text" value={url} name="Url" onChange={({target}) => setUrl(target.value)}/>
-          </div>
-        <button type="submit">Post</button>
-        <button onClick={cancelCreate}>Cancel</button>
-        </form>
-      </div>
+        <div style={displayButton}>
+            <button onClick={() => setCreateBlogVisible(true)}>New blog</button>
+        </div>
+        <br/>
+        <div style={displayCreate}>
+            <form onSubmit={ postBlog }>
+                <div>
+                    title <input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)}/>
+                </div>
+                <div>
+                    author <input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)}/>
+                </div>
+                <div>
+                    url <input type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)}/>
+                </div>
+                <button type="submit">Post</button>
+                <button onClick={cancelCreate}>Cancel</button>
+            </form>
+        </div>
     </div>)
 }
 
 CreateBlog.propTypes = {
-  user: PropTypes.object.isRequired,
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  setMessage: PropTypes.func.isRequired
+    user: PropTypes.object.isRequired,
+    blogs: PropTypes.array.isRequired,
+    setBlogs: PropTypes.func.isRequired,
+    setMessage: PropTypes.func.isRequired
 }
 
 

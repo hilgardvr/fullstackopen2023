@@ -2,68 +2,67 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const Blog = ({blog, removeBlog, updateBlogs, user, setMessage}) => {
-  const [displayDetails, setDisplayDetails] = useState(false)
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
-  const like = async () => {
-    const req = {
-      ...blog,
-      likes: blog.likes + 1,
-      userId: blog.userId.id,
+const Blog = ({ blog, removeBlog, updateBlogs, user, setMessage }) => {
+    const [displayDetails, setDisplayDetails] = useState(false)
+    const blogStyle = {
+        paddingTop: 10,
+        paddingLeft: 2,
+        border: 'solid',
+        borderWidth: 1,
+        marginBottom: 5
     }
-    const updated = await blogService.put(req)
-    updateBlogs(updated)
-  }
 
-  const remove = async () => {
-    const deleteBlog = window.confirm(`Do you want to delete ${blog.title}`)
-    if (deleteBlog) {
-      await blogService.remove(blog, user.token)
-      removeBlog(blog)
-      setMessage(`Deleted blog: ${blog.title}`)
-      setTimeout(() => {
-          setMessage(null)
-      }, 3000)
+    const like = async () => {
+        const req = {
+            ...blog,
+            likes: blog.likes + 1,
+            userId: blog.userId.id,
+        }
+        const updated = await blogService.put(req)
+        updateBlogs(updated)
     }
-  }
 
-  const deleteButton = () => {
-    if (user.name === blog.userId.name) {
-      return (<div><button onClick={() => remove()}>remove</button></div>)
-    } else {
-      return (<div></div>)
+    const remove = async () => {
+        const deleteBlog = window.confirm(`Do you want to delete ${blog.title}`)
+        if (deleteBlog) {
+            await blogService.remove(blog, user.token)
+            removeBlog(blog)
+            setMessage(`Deleted blog: ${blog.title}`)
+            setTimeout(() => {
+                setMessage(null)
+            }, 3000)
+        }
     }
-  }
 
-  return (<div>
-    {blog.title} - {blog.author}
-    <button onClick={()=> setDisplayDetails(!displayDetails)}>{displayDetails ? "hide" : "show"}</button>
-    <div style={displayDetails ? blogStyle : { display: 'none'}}>
-      <div>{blog.url}</div>
-      <div>
-        {blog.likes}
-        <button onClick={() => like()}>like</button>
-      </div>
-      <div>{blog.userId.username}</div>
-      {deleteButton()}
-    </div>
-  </div>)
+    const deleteButton = () => {
+        if (user.name === blog.userId.name) {
+            return (<div><button onClick={() => remove()}>remove</button></div>)
+        } else {
+            return (<div></div>)
+        }
+    }
+
+    return (<div>
+        { blog.title } - { blog.author }
+        <button onClick={() => setDisplayDetails(!displayDetails)}>{displayDetails ? 'hide' : 'show'}</button>
+        <div style={ displayDetails ? blogStyle : { display: 'none' } }>
+            <div>{blog.url}</div>
+            <div>
+                { blog.likes }
+                <button onClick={() => like()}>like</button>
+            </div>
+            <div>{blog.userId.username}</div>
+            {deleteButton()}
+        </div>
+    </div>)
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  removeBlog: PropTypes.func.isRequired,
-  updateBlogs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  setMessage: PropTypes.func.isRequired,
-
+    blog: PropTypes.object.isRequired,
+    removeBlog: PropTypes.func.isRequired,
+    updateBlogs: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    setMessage: PropTypes.func.isRequired,
 }
 
 
