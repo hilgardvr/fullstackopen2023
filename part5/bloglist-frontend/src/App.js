@@ -108,7 +108,7 @@ const App = () => {
       </form>
       <h2>blogs</h2>
       {blogs.sort(sortBlogs).map(blog =>
-        <Blog key={blog.id} blog={blog} removeBlog={removeBlog} updateBlogs={updateBlog} user={user} setMesssage={setMessage}/>
+        <Blog key={blog.id} blog={blog} removeBlog={removeBlog} updateBlogs={updateBlog} user={user} setMessage={setMessage}/>
       )}
       <CreateBlog user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
     </div>

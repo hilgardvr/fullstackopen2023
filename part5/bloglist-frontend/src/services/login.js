@@ -11,7 +11,8 @@ const login = async (username, password) => {
     return res.data
 }
 
-
-export default {
+const ex = {
     login
 }
+
+export default ex

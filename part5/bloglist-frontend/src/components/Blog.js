@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, removeBlog, updateBlogs, user, setMesssage: setMessage}) => {
+const Blog = ({blog, removeBlog, updateBlogs, user, setMessage}) => {
   const [displayDetails, setDisplayDetails] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -55,5 +56,15 @@ const Blog = ({blog, removeBlog, updateBlogs, user, setMesssage: setMessage}) =>
     </div>
   </div>)
 }
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  updateBlogs: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  setMessage: PropTypes.func.isRequired,
+
+}
+
 
 export default Blog
