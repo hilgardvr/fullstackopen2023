@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, removeBlog, updateBlogs, user, setMessage }) => {
@@ -16,16 +15,13 @@ const Blog = ({ blog, removeBlog, updateBlogs, user, setMessage }) => {
         const req = {
             ...blog,
             likes: blog.likes + 1,
-            userId: blog.userId.id,
         }
-        const updated = await blogService.put(req)
-        updateBlogs(updated)
+        updateBlogs(req)
     }
 
     const remove = async () => {
         const deleteBlog = window.confirm(`Do you want to delete ${blog.title}`)
         if (deleteBlog) {
-            await blogService.remove(blog, user.token)
             removeBlog(blog)
             setMessage(`Deleted blog: ${blog.title}`)
             setTimeout(() => {

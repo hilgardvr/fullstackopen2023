@@ -76,7 +76,12 @@ const App = () => {
         )
     }
 
-    const updateBlog = (blog) => {
+    const updateBlog = async (blog) => {
+        const req = {
+            ...blog,
+            userId: blog.userId.id,
+        }
+        await blogService.put(req)
         const updatedBlogs = blogs.map(b => {
             if (b.id === blog.id) {
                 return {
@@ -90,7 +95,8 @@ const App = () => {
         setBlogs(updatedBlogs)
     }
 
-    const removeBlog = (blog) => {
+    const removeBlog = async (blog) => {
+        await blogService.remove(blog, user.token)
         const filteredBlogs = blogs.filter(b => {
             return b.id !== blog.id
         })
