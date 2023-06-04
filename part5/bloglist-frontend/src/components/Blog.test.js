@@ -7,6 +7,7 @@ import userEvent from '@testing-library/user-event'
 
 describe('<Blog />', () => {
 
+    const mockUpdateBlogsHandler = jest.fn()
     let container = beforeEach(() => {
         const blog = {
             title: 'title',
@@ -22,7 +23,7 @@ describe('<Blog />', () => {
         const user = {}
         const setMessage = () => {}
 
-        container = render(<Blog blog={blog} removeBlog={removeBlog} updateBlogs={updateBlogs} user={user} setMessage={setMessage}/>).container
+        container = render(<Blog blog={blog} removeBlog={removeBlog} updateBlogs={mockUpdateBlogsHandler} user={user} setMessage={setMessage}/>).container
 
     })
 
@@ -50,5 +51,13 @@ describe('<Blog />', () => {
         expect(likes).toBeDefined()
         const url = screen.getByText('url')
         expect(url).toBeDefined()
+    })
+
+    test('liking sends event to handler', async () => {
+        const user = userEvent.setup()
+        const button = container.querySelector('.likeButton')
+        await user.click(button)
+        await user.click(button)
+        expect(mockUpdateBlogsHandler.mock.calls).toHaveLength(2)
     })
 })
