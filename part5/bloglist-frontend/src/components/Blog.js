@@ -39,9 +39,9 @@ const Blog = ({ blog, removeBlog, updateBlogs, user, setMessage }) => {
     }
 
     return (<div>
-        { blog.title } - { blog.author }
-        <button onClick={() => setDisplayDetails(!displayDetails)}>{displayDetails ? 'hide' : 'show'}</button>
-        <div style={ displayDetails ? blogStyle : { display: 'none' } }>
+        <span>{ blog.title }</span> <span>-</span> <span>{ blog.author }</span>
+        <button onClick={() => setDisplayDetails(!displayDetails)} className="hideShowButton">{displayDetails ? 'hide' : 'show'}</button>
+        <div style={ displayDetails ? blogStyle : { display: 'none' } }  className="hideableDiv">
             <div>{blog.url}</div>
             <div>
                 { blog.likes }
