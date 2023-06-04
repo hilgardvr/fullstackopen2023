@@ -19,7 +19,6 @@ describe('<Blog />', () => {
             }
         }
         const removeBlog = () => {}
-        const updateBlogs = () => {}
         const user = {}
         const setMessage = () => {}
 

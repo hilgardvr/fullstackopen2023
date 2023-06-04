@@ -76,6 +76,15 @@ const App = () => {
         )
     }
 
+    const createBlogHandler = async (title, author, url) => {
+        const resp = await blogService.post({
+            title: title,
+            author: author,
+            url: url,
+        }, user.token)
+        setBlogs(blogs.concat(resp))
+    }
+
     const updateBlog = async (blog) => {
         const req = {
             ...blog,
@@ -115,7 +124,7 @@ const App = () => {
             {blogs.sort(sortBlogs).map(blog =>
                 <Blog key={blog.id} blog={blog} removeBlog={removeBlog} updateBlogs={updateBlog} user={user} setMessage={setMessage}/>
             )}
-            <CreateBlog user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
+            <CreateBlog createBlogHandler={createBlogHandler} setMessage={setMessage}/>
         </div>
     }
 

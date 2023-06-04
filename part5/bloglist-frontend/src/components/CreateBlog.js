@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const CreateBlog = ({ user, blogs, setBlogs, setMessage }) => {
+const CreateBlog = ({ createBlogHandler, setMessage }) => {
     const [createBlogVisible, setCreateBlogVisible] = useState(false)
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
@@ -18,17 +17,12 @@ const CreateBlog = ({ user, blogs, setBlogs, setMessage }) => {
     const postBlog = async (event) => {
         event.preventDefault()
         try {
-            const resp = await blogService.post({
-                title: title,
-                author: author,
-                url: url,
-            }, user.token)
-            setBlogs(blogs.concat(resp))
+            await createBlogHandler(title, author, url)
+            setMessage(`Posted new blog: ${title}`)
             setTitle('')
             setAuthor('')
             setUrl('')
             setCreateBlogVisible(false)
-            setMessage(`Posted new blog: ${resp.title}`)
         } catch (ex) {
             setMessage('Failed to post blog')
         }
@@ -39,7 +33,7 @@ const CreateBlog = ({ user, blogs, setBlogs, setMessage }) => {
 
     return (<div>
         <div style={displayButton}>
-            <button onClick={() => setCreateBlogVisible(true)}>New blog</button>
+            <button onClick={() => setCreateBlogVisible(true)} className='showNewBlogForm'>New blog</button>
         </div>
         <br/>
         <div style={displayCreate}>
@@ -61,9 +55,7 @@ const CreateBlog = ({ user, blogs, setBlogs, setMessage }) => {
 }
 
 CreateBlog.propTypes = {
-    user: PropTypes.object.isRequired,
-    blogs: PropTypes.array.isRequired,
-    setBlogs: PropTypes.func.isRequired,
+    createBlogHandler: PropTypes.func.isRequired,
     setMessage: PropTypes.func.isRequired
 }
 
