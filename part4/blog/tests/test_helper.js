@@ -38,9 +38,13 @@ const getLoginToken = async (api) => {
     return login.body.token
 }
 
-const beforeEach = async () => {
+const clearDb = async () => {
     await Blog.deleteMany({})
     await User.deleteMany({})
+}
+
+const beforeEach = async () => {
+    await clearDb()
     const users = initUsers.map(u => u.passwordHash = passwordHash(u.password)).map(u => new User(u))
     const promiseUsers = users.map(u => u.save())
     const savedUsers = await Promise.all(promiseUsers)
@@ -59,5 +63,5 @@ const beforeEach = async () => {
 }
 
 module.exports = {
-    initBlogs, initUsers, beforeEach, getLoginToken
+    initBlogs, initUsers, beforeEach, getLoginToken, clearDb
 }
