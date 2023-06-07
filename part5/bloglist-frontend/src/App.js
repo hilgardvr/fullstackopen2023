@@ -65,12 +65,12 @@ const App = () => {
             <div>
                 <form onSubmit={handleLogin}>
                     <div>
-                      username <input type="text" value={ username } name="Username" onChange={({ target }) => { setUsername(target.value) }}></input>
+                      username <input className='username' type="text" value={ username } name="Username" onChange={({ target }) => { setUsername(target.value) }}></input>
                     </div>
                     <div>
-                      password <input type="text" value={ password } name="Password" onChange={({ target }) => setPassword(target.value)}></input>
+                      password <input className='password' type="text" value={ password } name="Password" onChange={({ target }) => setPassword(target.value)}></input>
                     </div>
-                    <button type="submit">login</button>
+                    <button className='login' type="submit">login</button>
                 </form>
             </div>
         )

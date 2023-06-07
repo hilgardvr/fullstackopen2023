@@ -5,7 +5,9 @@ describe('blog app', () => {
   })
 
   it('login page is shown', () => {
-    // cy.visit('https://example.cypress.io')
+    cy.get('.username')
+    cy.get('.password')
+    cy.get('.login')
   })
 
 })
