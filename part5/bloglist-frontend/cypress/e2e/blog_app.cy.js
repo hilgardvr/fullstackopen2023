@@ -42,7 +42,26 @@ describe('blog app', () => {
       cy.contains('Wrong Credentials')
     })
 
+    describe('when logged in', () => {
+      beforeEach( () => {
+        cy.get('.username').type(initUsers[0].username)
+        cy.get('.password').type(initUsers[0].password)
+        cy.get('.login').click()
+      })
 
+      it('can create a new blog', () => {
+        cy.contains('New blog').click()
+        cy.get('.title').type('new title')
+        cy.get('.author').type('new author')
+        cy.get('.url').type('new url')
+        cy.contains('Post').click()
+        cy.contains('Posted new blog: new title')
+        cy.contains('new blog')
+        cy.contains('new author')
+      })
+    })
   })
+
+ 
 
 })
