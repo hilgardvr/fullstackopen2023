@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-describe('blog app', () => {
+describe('blog app', async () => {
 
   const initUsers = [
     {
@@ -14,15 +14,15 @@ describe('blog app', () => {
       "password": "password123"
     }
   ]
-  const addUser = async () => {
+  const addUsers = async () => {
     const response = await axios.post("http://localhost:3003/api/users", initUsers[0])
     const response2 = await axios.post("http://localhost:3003/api/users", initUsers[1])
     console.log(response)
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    addUser()
+    await addUsers()
     cy.visit('http://localhost:3000')
   })
 
@@ -50,6 +50,7 @@ describe('blog app', () => {
 
     describe('when logged in', () => {
       beforeEach(() => {
+        addUsers()
         cy.get('.username').type(initUsers[0].username)
         cy.get('.password').type(initUsers[0].password)
         cy.get('.login').click()
@@ -100,7 +101,7 @@ describe('blog app', () => {
         cy.get('.title').type('new title')
         cy.get('.author').type('new author')
         cy.get('.url').type('new url')
-        cy.contains('Post').click()
+        cy.get('.postNewBlog').click()
         cy.contains('Posted new blog: new title')
         cy.contains('new blog')
         cy.contains('new author')
@@ -110,6 +111,35 @@ describe('blog app', () => {
         cy.get('.login').click()
         cy.contains('show').click()
         cy.contains('remove').should('not.exist')
+      })
+
+      it('blogs are ordered acoording to likes', () => {
+        cy.contains('New blog').click()
+        cy.get('.title').type('new title')
+        cy.get('.author').type('new author')
+        cy.get('.url').type('new url')
+        cy.contains('Post').click()
+        cy.contains('Posted new blog: new title')
+        cy.contains('new blog')
+        cy.contains('new author')
+        cy.contains('show').click()
+        cy.contains('0')
+        cy.contains('like').click()
+        cy.contains('1')
+        cy.contains('like').click()
+
+        cy.contains('New blog').click()
+        cy.get('.title').type('new title2')
+        cy.get('.author').type('new author2')
+        cy.get('.url').type('new url2')
+
+        cy.contains('hide').click()
+
+        cy.get('.postNewBlog').click()
+        cy.contains('Posted new blog: new title2')
+
+        cy.get('.blogTitle').eq(0).should('contain', 'new title')
+        cy.get('.blogTitle').eq(1).should('contain', 'new title2')
       })
     })
   })

@@ -38,8 +38,8 @@ const Blog = ({ blog, removeBlog, updateBlogs, user, setMessage }) => {
         }
     }
 
-    return (<div>
-        <span>{ blog.title }</span> <span>-</span> <span>{ blog.author }</span>
+    return (<div className='blog'>
+        <span className='blogTitle'>{ blog.title }</span> <span>-</span> <span>{ blog.author }</span>
         <button onClick={() => setDisplayDetails(!displayDetails)} className="hideShowButton">{displayDetails ? 'hide' : 'show'}</button>
         <div style={ displayDetails ? blogStyle : { display: 'none' } }  className="hideableDiv">
             <div>{blog.url}</div>

@@ -47,7 +47,7 @@ const CreateBlog = ({ createBlogHandler, setMessage }) => {
                 <div>
                     url <input className="url" type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)}/>
                 </div>
-                <button type="submit">Post</button>
+                <button className='postNewBlog' type="submit">Post</button>
                 <button onClick={cancelCreate}>Cancel</button>
             </form>
         </div>
