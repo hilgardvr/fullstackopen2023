@@ -26,7 +26,6 @@ const reducer = (state = initialState, action) => {
     case "VOTE": 
       const id = action.payload.id
       const anecdoteVoted = state.find(a => a.id === id)
-      console.log("found:", anecdoteVoted)
       const voted = {
         ...anecdoteVoted,
         votes: anecdoteVoted.votes + 1
