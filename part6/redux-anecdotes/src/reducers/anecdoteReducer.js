@@ -7,12 +7,12 @@ const reducerSlice = createSlice({
     addAncedote(state, action) {
       state.push(action.payload)
     },
+    addAncedotes(state, action) {
+      state.push(...action.payload)
+    },
     voteFor(state, action) {
-      // console.log("state",  JSON.parse(JSON.stringify(state)))
-      // console.log("ac", action.payload)
       const id = action.payload
       const anecdoteVoted = state.find(a => a.id === id)
-      // console.log("av", anecdoteVoted)
       const voted = {
         ...anecdoteVoted,
         votes: anecdoteVoted.votes + 1
@@ -22,5 +22,5 @@ const reducerSlice = createSlice({
   }
 })
 
-export const { addAncedote, voteFor } = reducerSlice.actions
+export const { addAncedote, addAncedotes, voteFor } = reducerSlice.actions
 export default reducerSlice.reducer
