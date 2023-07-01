@@ -44,5 +44,5 @@ export const addVote = anecdoteId => {
   }
 }
 
-export const { addAncedote, addAncedotes, voteFor } = reducerSlice.actions
+const { addAncedote, addAncedotes, voteFor } = reducerSlice.actions
 export default reducerSlice.reducer

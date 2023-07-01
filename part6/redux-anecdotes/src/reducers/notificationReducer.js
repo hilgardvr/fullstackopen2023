@@ -24,5 +24,5 @@ export const setNotification = (note, timeout = 5000) => {
   }
 }
 
-export const { notify, removeNotification } = notificationSlice.actions
+const { notify, removeNotification } = notificationSlice.actions
 export default notificationSlice.reducer
