@@ -33,10 +33,15 @@ export const initializeAnecdotes = () => {
 export const createAnecdote = anecdote => {
   return async dispatch => {
     const newAnecdote = await anecdoteService.create(anecdote)
-    console.log(newAnecdote)
     dispatch(addAncedote(newAnecdote))
   }
+}
 
+export const addVote = anecdoteId => {
+  return async dispatch => {
+    const voted = await anecdoteService.addVote(anecdoteId)
+    dispatch(voteFor(voted.id))
+  }
 }
 
 export const { addAncedote, addAncedotes, voteFor } = reducerSlice.actions
