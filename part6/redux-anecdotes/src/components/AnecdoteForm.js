@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux"
 import { addAncedote } from "../reducers/anecdoteReducer"
+import anecdoteService from "../services/anecdotes"
 
 
 const getId = () => (100000 * Math.random()).toFixed(0)
@@ -18,7 +19,9 @@ const AnecdoteForm = () => {
     const addNew = (event) => {
         event.preventDefault()
         const anecdote = event.target.anecdote.value
-        dispatch(addAncedote(asObject(anecdote)))
+        const anecdoteObj = asObject(anecdote)
+        anecdoteService.create(anecdoteObj)
+        dispatch(addAncedote(anecdoteObj))
     }
     return (
         <div>
