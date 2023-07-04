@@ -1,7 +1,7 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import axios from 'axios'
+import { getAnecdotes, createAnecdote } from './requests/request'
 
 const App = () => {
 
@@ -10,13 +10,27 @@ const App = () => {
     console.log('vote')
   }
 
-  const result = useQuery(
-    'anecdotes',
-    () => axios.get('http://localhost:3001/anecdotes').then(res => res.data),
+  const queryClient = useQueryClient()
+
+  const result = useQuery('anecdotes', getAnecdotes, { retry: false })
+
+  const newAnecdoteMutaion = useMutation(
+    createAnecdote, 
     {
-      retry: false
+      onSuccess: () => {
+        queryClient.invalidateQueries('anecdotes')
+      }
     }
   )
+
+  const getId = () => (100000 * Math.random()).toFixed(0)
+
+  const onCreate = (event) => {
+    event.preventDefault()
+    const content = event.target.anecdote.value
+    event.target.anecdote.value = ''
+    newAnecdoteMutaion.mutate({id: getId(), content: content, votes: 0})
+  }
 
   if (result.isLoading) {
     return <div>Loading data..</div>
@@ -26,16 +40,14 @@ const App = () => {
     return <div>anecdote service not available due to a problem on the server</div>
   }
 
-
   const anecdotes = result.data
-
 
   return (
     <div>
       <h3>Anecdote app</h3>
     
       <Notification />
-      <AnecdoteForm />
+      <AnecdoteForm onCreate={onCreate} />
     
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
