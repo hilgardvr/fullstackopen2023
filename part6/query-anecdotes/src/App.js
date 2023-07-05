@@ -42,6 +42,13 @@ const App = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('anecdotes')
+      },
+      onError: (err) => {
+        notificationDispatch({
+          type: "SET",
+          payload: `Error: ${err.response.data.error}`
+        })
+        setTimeout(() => notificationDispatch("EMPTY"), 5000)
       }
     }
   )
