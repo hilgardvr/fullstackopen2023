@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom'
 
 const Menu = ({anecdotes, addNew}) => {
   const padding = {
@@ -35,7 +35,6 @@ const AnecdoteList = ({ anecdotes }) => (
 const Anecdote = ({anecdotes}) => {
   const id = useParams().id
   const anecdote = anecdotes.find(a => a.id === Number(id))
-  console.log(anecdote)
   return (
     <div>
       <p>
@@ -49,6 +48,22 @@ const Anecdote = ({anecdotes}) => {
       </p>
     </div>
   )
+}
+
+const Notification = ({notification}) => {
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+  if (notification) {
+    return (
+    <div style={style}>
+        {notification}
+    </div>
+  )} else {
+    return null
+  }
 }
 
 const About = () => (
@@ -74,6 +89,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  const navigate = useNavigate()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -87,6 +103,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -135,6 +152,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`Added anecdote: ${anecdote.content}`)
+    setTimeout(() => setNotification(null), 5000)
   }
 
   const anecdoteById = (id) =>
@@ -153,20 +172,12 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification}/>
       <Menu anecdotes={anecdotes} addNew={addNew}/>
       <Footer />
     </div>
   )
 
-  // return (
-  //   <div>
-  //     <h1>Software anecdotes</h1>
-  //     <Menu />
-  //     <AnecdoteList anecdotes={anecdotes} />
-  //     <About />
-  //     <CreateNew addNew={addNew} />
-  //   </div>
-  // )
 }
 
 export default App
