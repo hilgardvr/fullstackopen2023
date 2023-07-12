@@ -106,6 +106,13 @@ const CreateNew = (props) => {
     navigate('/')
   }
 
+  const clear = (e) => {
+    e.preventDefault()
+    content.setField('')
+    author.setField('')
+    info.setField('')
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -123,6 +130,7 @@ const CreateNew = (props) => {
           <input name={info.type} value={info.value} onChange={(e)=> info.onChange(e)} />
         </div>
         <button>create</button>
+        <button onClick={clear}>reset</button>
       </form>
     </div>
   )
