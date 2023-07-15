@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-// import axios from 'axios'
+import resourceService from './services/resource-service'
 
 const useField = (type) => {
   const [value, setValue] = useState('')
@@ -16,12 +16,20 @@ const useField = (type) => {
 }
 
 const useResource = (baseUrl) => {
+
   const [resources, setResources] = useState([])
 
-  // ...
+  useEffect(() => {
+    resourceService.getAll(baseUrl)
+      .then(r => setResources(r))
+  }, [])
 
   const create = (resource) => {
-    // ...
+    resourceService.create(baseUrl, resource)
+      .then(r => {
+        setResources(resources.concat(r))
+      })
+    
   }
 
   const service = {
